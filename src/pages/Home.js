@@ -1,14 +1,22 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
   Platform,
-  TouchableOpacity,
+  FlatList,
 } from 'react-native';
-
+import {Button} from '../components/Button';
+import {SkillCard} from '../components/SkillCard';
 export function Home() {
+  const [newSkill, setNewSkill] = useState('');
+  const [mySkills, setMySkills] = useState([]);
+
+  function handleAddNewSkill() {
+    setMySkills([...mySkills, newSkill]);
+  }
+
   return (
     <View style={styles.content}>
       <Text style={styles.title}> Welcome Bruno </Text>
@@ -16,11 +24,16 @@ export function Home() {
         style={styles.input}
         placeholder="New Skill"
         placeholderTextColor="#555"
+        onChangeText={setNewSkill}
       />
-      <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-        <Text style={styles.textButton}>Add</Text>
-      </TouchableOpacity>
-      <Text style={[styles.title, {marginTop: 50}]}>My Skill</Text>
+      <Button handleAddNewSkill={handleAddNewSkill} />
+
+      <Text style={[styles.title, {marginVertical: 50}]}>My skills</Text>
+      <FlatList
+        data={mySkills}
+        keyExtractor={item => item}
+        renderItem={({item}) => <SkillCard mySkill={item} />}
+      />
     </View>
   );
 }
@@ -44,17 +57,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 30,
     borderRadius: 7,
-  },
-  button: {
-    padding: 15,
-    backgroundColor: '#a370f7',
-    alignItems: 'center',
-    borderRadius: 7,
-    marginTop: 10,
-  },
-  textButton: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 17,
   },
 });
